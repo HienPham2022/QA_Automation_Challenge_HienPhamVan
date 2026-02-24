@@ -137,3 +137,13 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Playwright BDD generated files
+.features-gen/
+
+# Playwright test results and reports
+reports/
+test-results/
+playwright-report/
+login-results.txt
+cart-results.txt

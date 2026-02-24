@@ -1,0 +1,34 @@
+{
+  "validUser": {
+    "username": "hienpham",
+    "password": "123"
+  },
+  "invalidCredentials": {
+    "username": "hienpham",
+    "password": "1111"
+  },
+  "nonExistentUser": {
+    "username": "nonexistent_user_12345",
+    "password": "anypassword"
+  },
+  "emptyCredentials": {
+    "username": "",
+    "password": ""
+  },
+  "sqlInjection": {
+    "username": "' OR '1'='1",
+    "password": "' OR '1'='1"
+  },
+  "xssAttempt": {
+    "username": "<script>alert('xss')</script>",
+    "password": "password123"
+  },
+  "specialCharacters": {
+    "username": "user@#$%^&*()",
+    "password": "pass!@#$%"
+  },
+  "longCredentials": {
+    "username": "verylongusernamethatexceedsnormallengthlimitsfortesting",
+    "password": "verylongpasswordthatexceedsnormallengthlimitsfortesting"
+  }
+}

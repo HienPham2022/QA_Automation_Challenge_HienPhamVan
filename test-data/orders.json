@@ -1,0 +1,26 @@
+{
+  "validOrder": {
+    "name": "John Doe",
+    "country": "United States",
+    "city": "New York",
+    "creditCard": "4111111111111111",
+    "month": "12",
+    "year": "2025"
+  },
+  "minimalOrder": {
+    "name": "Test",
+    "country": "US",
+    "city": "NYC",
+    "creditCard": "1234",
+    "month": "1",
+    "year": "25"
+  },
+  "emptyOrder": {
+    "name": "",
+    "country": "",
+    "city": "",
+    "creditCard": "",
+    "month": "",
+    "year": ""
+  }
+}
