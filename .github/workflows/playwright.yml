@@ -21,6 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
+      max-parallel: 1
       matrix:
         browser: [chromium, firefox, webkit]
 
@@ -51,6 +52,7 @@ jobs:
           retention-days: 30
 
   smoke-tests:
+    needs: test
     timeout-minutes: 30
     runs-on: ubuntu-latest
     
@@ -81,6 +83,7 @@ jobs:
           retention-days: 30
 
   api-tests:
+    needs: smoke-tests
     timeout-minutes: 30
     runs-on: ubuntu-latest
     

@@ -69,10 +69,6 @@ npx playwright install
 
 ---
 
-## Running Tests
-
-> 📖 **See [QUICK_START.md](QUICK_START.md) for detailed Vietnamese guide**
-
 ### Quick Start
 
 ```bash
@@ -365,44 +361,6 @@ GitHub Actions workflow runs automatically on:
 - Push/PR to `main` branch
 - Cross-browser testing (Chromium, Firefox, WebKit)
 - Test reports uploaded as artifacts
-
----
-
-## Writing New Tests
-
-### 1. Add scenario to feature file
-
-```gherkin
-# features/login.feature
-@login @happy-path
-Scenario: My new login test
-  Given I am on the DemoBlaze homepage
-  When I open the login modal
-  And I login with username "user" and password "pass"
-  Then I should be logged in as "user"
-```
-
-### 2. Create step definition (if needed)
-
-```typescript
-// steps/login.steps.ts
-When('I do something new', async ({ loginPage }) => {
-  await loginPage.doSomething();
-});
-```
-
-### 3. Generate and run
-
-```bash
-npm run bddgen
-npm run test:login
-```
-
----
-
-## License
-
-MIT License
 
 ---
 
