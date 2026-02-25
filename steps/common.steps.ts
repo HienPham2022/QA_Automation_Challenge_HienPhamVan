@@ -21,6 +21,11 @@ Then('I should be on the homepage', async ({ homePage }) => {
   expect(isHome).toBe(true);
 });
 
+When('I refresh the page', async ({ page }) => {
+  await page.reload();
+  await page.waitForLoadState('networkidle');
+});
+
 // ─── Alert Verification ──────────────────────────────────
 
 Then(
@@ -30,6 +35,10 @@ Then(
     expect(state.alertMessage.toLowerCase()).toContain(expectedText.toLowerCase());
   },
 );
+
+Then('I should see an alert', async ({ state }) => {
+  expect(state.alertMessage).toBeTruthy();
+});
 
 // ─── Category Selection ──────────────────────────────────
 

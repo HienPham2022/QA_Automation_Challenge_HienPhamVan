@@ -180,4 +180,12 @@ export class CartPage extends BasePage {
   async isOnCartPage(): Promise<boolean> {
     return this.page.url().includes('cart.html');
   }
+
+  async verifyDeleteButtonsVisible(): Promise<boolean> {
+    const count = await this.getCartItemCount();
+    if (count === 0) return true; // Empty cart has no delete buttons needed
+    
+    const deleteButtonCount = await this.deleteButtons.count();
+    return deleteButtonCount === count;
+  }
 }

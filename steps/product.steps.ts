@@ -45,3 +45,8 @@ Then('the product description should not be empty', async ({ productPage }) => {
   expect(details.description).toBeTruthy();
   expect(details.description!.length).toBeGreaterThan(0);
 });
+
+Then('the product image should be visible', async ({ productPage }) => {
+  const imageVisible = await productPage.isProductImageVisible();
+  expect(imageVisible).toBe(true);
+});

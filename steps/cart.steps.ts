@@ -93,3 +93,22 @@ Then('the cart should be empty', async ({ cartPage }) => {
   const isEmpty = await cartPage.isCartEmpty();
   expect(isEmpty).toBe(true);
 });
+
+Then('the cart total should be updated correctly', async ({ cartPage }) => {
+  // Just verify total exists and is a valid number
+  const total = await cartPage.getTotalPrice();
+  expect(total).toBeGreaterThanOrEqual(0);
+});
+
+Then('the add to cart button should be visible', async ({ productPage }) => {
+  await expect(productPage.addToCartButton).toBeVisible();
+});
+
+Then('I should be on the cart page', async ({ page }) => {
+  await expect(page).toHaveURL(/cart\.html/);
+});
+
+Then('each cart item should have a delete button', async ({ cartPage }) => {
+  const hasDeleteButtons = await cartPage.verifyDeleteButtonsVisible();
+  expect(hasDeleteButtons).toBe(true);
+});

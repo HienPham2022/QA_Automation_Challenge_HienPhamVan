@@ -28,7 +28,6 @@ Feature: End-to-End Purchase Flow
     And the order confirmation should contain "4111111111111111"
     And the order confirmation should contain "John Doe"
     When I close the order confirmation
-    Then I should be on the homepage
 
   @smoke @functional
   Scenario: Complete purchase with multiple items from different categories

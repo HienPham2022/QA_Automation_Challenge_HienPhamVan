@@ -18,6 +18,8 @@ export interface BddState {
   orderConfirmation: string;
   lastProductName: string;
   lastProductPrice: number;
+  rememberedUsername: string;
+  rememberedPassword: string;
 }
 
 /** All custom fixtures */
@@ -50,6 +52,8 @@ export const test = base.extend<BddFixtures>({
       orderConfirmation: '',
       lastProductName: '',
       lastProductPrice: 0,
+      rememberedUsername: '',
+      rememberedPassword: '',
     });
   },
 });

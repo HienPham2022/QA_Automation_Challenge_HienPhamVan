@@ -1,279 +1,413 @@
 # DemoBlaze E2E Automation Framework
 
-A modern end-to-end test automation framework built with **Playwright** and **TypeScript** for the [DemoBlaze](https://www.demoblaze.com/) e-commerce application.
+A comprehensive BDD test automation framework built with **Playwright**, **TypeScript**, and **Cucumber/Gherkin** for the [DemoBlaze](https://www.demoblaze.com/) e-commerce application.
 
-## 🚀 Framework Features
+## Test Coverage Summary
+- Link test suite google sheet : https://docs.google.com/spreadsheets/d/1D6ttaFbaNPsbJc_UsrgNcPz1uBj7xwcxTOOFLxwxqNk/edit?usp=sharing
 
-- **Playwright Test Runner**: Fast and reliable test execution
-- **Cross-Browser Testing**: Chromium, Firefox, WebKit + Mobile support
-- **Page Object Model (POM)**: Modular and maintainable architecture
-- **TypeScript**: Type-safe test development
-- **CI/CD Ready**: GitHub Actions workflow included
-- **Comprehensive Reporting**: HTML, JSON, JUnit reports with screenshots
-- **Parallel Execution**: Full parallel test execution
-- **API Testing**: REST API tests using Playwright's `APIRequestContext`
-- **Environment Configuration**: Configurable via `.env` file
+## Framework Features
 
-## 📁 Project Structure
+- BDD with Gherkin: Human-readable test scenarios in `.feature` files
+- Playwright + TypeScript: Fast, reliable, type-safe test execution
+- Page Object Model (POM): Modular and maintainable architecture
+- Cross-Browser Testing: Chromium, Firefox, WebKit support
+- Comprehensive Coverage: 144 test cases covering Happy Path & Edge Cases
+- API Testing: REST API tests included
+- CI/CD Ready: GitHub Actions workflow included
 
-```text
+---
+
+## Project Structure
+
+```
+├── features/               # BDD Feature files (Gherkin)
+│   ├── login.feature       # Login & Signup scenarios (58 tests)
+│   ├── cart.feature        # Shopping cart scenarios (51 tests)
+│   └── e2e-purchase.feature # End-to-end purchase flows (9 tests)
+├── steps/                  # Step definitions
+│   ├── login.steps.ts
+│   ├── cart.steps.ts
+│   ├── product.steps.ts
+│   ├── order.steps.ts
+│   ├── common.steps.ts
+│   └── fixtures.ts         # BDD fixtures
 ├── src/
-│   ├── api/                # API client and endpoints
-│   ├── config/             # Environment configuration
-│   ├── fixtures/           # Playwright test fixtures (Page Object injection)
 │   ├── pages/              # Page Object Model classes
-│   │   └── components/     # Reusable UI components (Header, Modal)
-│   ├── types/              # TypeScript type definitions
-│   └── utils/              # Helper utilities (logger, validators, etc.)
-├── tests/
-│   ├── api/                # API tests
-│   └── ui/                 # UI tests (login, cart, e2e)
+│   ├── api/                # API client
+│   ├── config/             # Environment configuration
+│   ├── types/              # TypeScript types
+│   └── utils/              # Utilities (logger, helpers)
+├── tests/api/              # API tests (26 tests)
 ├── test-data/              # Test data (JSON)
-├── reports/                # Test reports (generated, gitignored)
-├── .github/workflows/      # CI/CD pipeline (GitHub Actions)
-└── docs/                   # Documentation
+├── reports/                # Test reports (generated)
+├── README.md               # Full documentation
+└── test-suite.txt          # Detailed test suite document
 ```
 
-## 🛠️ Prerequisites
+---
+
+## Prerequisites
 
 - Node.js >= 18.0.0
 - npm >= 9.0.0
 
-## 📦 Installation
+---
+
+## Installation
 
 ```bash
-# Install dependencies (also installs Playwright browsers via postinstall)
+# Clone repository
+git clone https://github.com/HienPham2022/QA_Automation_Challenge_HienPhamVan.git
+cd QA_Automation_Challenge_HienPhamVan
+
+# Install dependencies
 npm install
 
-# Or install Playwright browsers separately
-npm run prepare
+# Install Playwright browsers
+npx playwright install
 ```
 
-## ⚙️ Configuration
+---
+
+## Running Tests
+
+> 📖 **See [QUICK_START.md](QUICK_START.md) for detailed Vietnamese guide**
+
+### Quick Start
 
 ```bash
-# Copy environment template and edit with your configuration
-cp .env.example .env
-```
-
-Key environment variables:
-
-| Variable | Default | Description |
-| --- | --- | --- |
-| `BASE_URL` | `https://www.demoblaze.com` | Application base URL |
-| `API_URL` | `https://api.demoblaze.com` | API base URL |
-| `TEST_USERNAME` | `testuser123` | Test user username |
-| `TEST_PASSWORD` | `testpass123` | Test user password |
-| `TIMEOUT` | `30000` | Default timeout (ms) |
-| `HEADLESS` | `true` | Run in headless mode |
-
-## 🧪 Running Tests
-
-### All Tests
-
-```bash
+# Run ALL tests (headless - fast)
 npm test
+
+# Run with browser visible (demo/debug)
+npm run test:headed
 ```
 
-### UI Tests
+### Run by Feature Tag (Headless)
 
 ```bash
-npm run test:ui
+# Login feature tests (58 tests)
+npm run test:login
+
+# Cart feature tests (51 tests)
+npm run test:cart
+
+# E2E purchase flow tests (9 tests)
+npm run test:e2e
+
+# Smoke tests only (6 tests)
+npm run test:smoke
 ```
 
-### API Tests
+### Run by Test Type (Headless)
 
 ```bash
+# Happy Path tests only (63 tests)
+npm run test:happy-path
+
+# Edge Case tests only (81 tests)
+npm run test:edge-case
+
+# Security tests only (7 tests)
+npm run test:security
+
+# API tests only (26 tests)
 npm run test:api
 ```
 
-### Specific Test Suites
+### Run on Specific Browser
 
 ```bash
-npm run test:login   # Login tests
-npm run test:cart    # Cart tests
-npm run test:e2e     # E2E flow tests
+npm run test:chromium   # Chrome
+npm run test:firefox    # Firefox
+npm run test:webkit     # Safari
 ```
 
-### Cross-Browser Testing
+---
+
+## Run Tests with Browser Visible (Headed Mode)
+
+### Run by Feature (with Browser)
 
 ```bash
-npm run test:chromium   # Chromium only
-npm run test:firefox    # Firefox only
-npm run test:webkit     # WebKit (Safari) only
+# Run ALL Login tests with browser visible
+npm run test:login:headed
+
+# Run ALL Cart tests with browser visible
+npm run test:cart:headed
+
+# Run ALL E2E tests with browser visible
+npm run test:e2e:headed
+
+# Run ALL Smoke tests with browser visible
+npm run test:smoke:headed
 ```
 
-### Debug & Visual Mode
+### Run by Test Suite Type (with Browser)
 
 ```bash
-# Run with browser visible (headed mode)
+# Run ALL Happy Path tests with browser visible
+npm run test:happy-path:headed
+
+# Run ALL Edge Case tests with browser visible
+npm run test:edge-case:headed
+
+# Run ALL Security tests with browser visible
+npm run test:security:headed
+```
+
+### Run ALL Tests with Browser
+
+```bash
+# Run everything with browser visible
 npm run test:headed
+```
 
-# Step-by-step with Playwright Inspector
+---
+
+## Run Specific Scenario (with Browser)
+
+To run a single test scenario with the browser visible:
+
+```bash
+# Step 1: Generate tests from feature files (required once)
+npm run bddgen
+
+# Step 2: Run specific scenario by name
+npx playwright test -g "Scenario Name" --headed --project=chromium --workers=1
+```
+
+### Examples
+
+```bash
+# Run specific login test
+npm run bddgen
+npx playwright test -g "Successful login with valid credentials" --headed --project=chromium --workers=1
+
+# Run specific cart test
+npm run bddgen
+npx playwright test -g "Add a single product to the cart" --headed --project=chromium --workers=1
+
+# Run specific E2E test
+npm run bddgen
+npx playwright test -g "Complete purchase as a logged-in user" --headed --project=chromium --workers=1
+```
+
+### One-liner command
+
+```bash
+npm run bddgen ; npx playwright test -g "Add a single product to the cart" --headed --project=chromium --workers=1
+```
+
+---
+
+## Debug Mode
+
+```bash
+# Debug with Playwright Inspector (step-by-step)
 npm run test:debug
 
-# Run headed, one at a time, Chromium only (recommended for demo)
-npx playwright test --headed --project=chromium --workers=1
-
-# Open interactive UI mode
+# Interactive UI Mode (best for debugging)
 npx playwright test --ui
 ```
 
-### Run a Specific Test by Name
+---
+
+## View Test Reports
 
 ```bash
-npx playwright test -g "should login successfully" --headed --project=chromium
-```
-
-## 📊 Test Reports
-
-After running tests, view the HTML report:
-
-```bash
+# Open HTML report after test run
 npm run report
+
+# Reports are saved in: reports/html-report/
 ```
 
-Reports are generated in `reports/html-report/`.
+---
 
-Clean up reports:
+## Clean Up
 
 ```bash
+# Remove generated reports and test artifacts
 npm run clean
 ```
 
-## 🔧 Key Commands
+---
+
+## All Available Commands
 
 | Command | Description |
-| --- | --- |
-| `npm test` | Run all tests (all browsers) |
-| `npm run test:ui` | Run UI tests only |
-| `npm run test:api` | Run API tests only |
-| `npm run test:login` | Run login tests |
-| `npm run test:cart` | Run cart tests |
-| `npm run test:e2e` | Run E2E flow tests |
-| `npm run test:chromium` | Run on Chromium only |
-| `npm run test:firefox` | Run on Firefox only |
-| `npm run test:webkit` | Run on WebKit only |
-| `npm run test:headed` | Run with browser visible |
+|---------|-------------|
+| `npm test` | Run all BDD tests (headless) |
+| `npm run test:headed` | Run ALL tests with browser visible |
+| **Feature Tests** | |
+| `npm run test:login` | Run Login feature tests |
+| `npm run test:login:headed` | Run Login tests with browser |
+| `npm run test:cart` | Run Cart feature tests |
+| `npm run test:cart:headed` | Run Cart tests with browser |
+| `npm run test:e2e` | Run E2E purchase tests |
+| `npm run test:e2e:headed` | Run E2E tests with browser |
+| **Test Suite Types** | |
+| `npm run test:smoke` | Run smoke tests only |
+| `npm run test:smoke:headed` | Run smoke tests with browser |
+| `npm run test:happy-path` | Run happy path tests |
+| `npm run test:happy-path:headed` | Run happy path with browser |
+| `npm run test:edge-case` | Run edge case tests |
+| `npm run test:edge-case:headed` | Run edge case with browser |
+| `npm run test:security` | Run security tests |
+| `npm run test:security:headed` | Run security tests with browser |
+| **API & Utilities** | |
+| `npm run test:api` | Run API tests |
 | `npm run test:debug` | Run with Playwright Inspector |
-| `npm run report` | Open HTML report |
-| `npm run clean` | Clean report files |
-| `npm run typecheck` | TypeScript type checking |
+| `npm run test:chromium` | Run on Chrome only |
+| `npm run test:firefox` | Run on Firefox only |
+| `npm run test:webkit` | Run on Safari only |
+| `npm run bddgen` | Generate tests from .feature files |
+| `npm run report` | Open HTML test report |
+| `npm run clean` | Clean generated reports |
 
-## 🧩 Test Coverage
+---
 
-### Login Module (@login)
+### Login Feature Coverage (@login)
 
-- ✅ Successful login with valid credentials
-- ✅ Logout after login
-- ✅ Welcome message verification
-- ✅ Close login modal
-- ✅ Invalid credentials handling
-- ✅ Non-existent user handling
-- ✅ Empty username/password validation
-- ✅ SQL injection prevention
-- ✅ XSS prevention
-- ✅ Signup new user
-- ✅ Signup existing user error
-- ✅ Login/Signup modal UI elements
+- Successful login/logout flow
+- Session persistence after refresh
+- Signup new user & login with new account
+- Empty fields validation
+- Invalid credentials handling
+- SQL injection & XSS prevention
+- Boundary testing (long inputs)
+- Special characters handling
+- Input manipulation (whitespace, tabs, newlines)
+- UI interaction (Enter key, double-click, rapid clicks)
+- Browser navigation persistence
+- Local storage clearing behavior
 
-### Cart Module (@cart)
+### Cart Feature Coverage (@cart)
 
-- ✅ Add single product to cart
-- ✅ Add multiple products to cart
-- ✅ Add products from different categories
-- ✅ Delete item from cart
-- ✅ Delete specific item by name
-- ✅ Clear entire cart
-- ✅ Cart total calculation (single & multiple items)
-- ✅ Total update after deletion
-- ✅ Category navigation (phones, laptops, monitors)
-- ✅ Product detail verification
+- Add single/multiple products
+- Add from all categories (Phones, Laptops, Monitors)
+- Delete items (by index, by name, clear all)
+- Cart total calculations
+- Cart persistence (navigation, refresh, login)
+- Empty cart handling
+- Product detail verification
 
-### E2E Flows (@e2e)
+### E2E Purchase Coverage (@e2e)
 
-- ✅ Complete purchase as logged-in user
-- ✅ Complete purchase with multiple items
-- ✅ Guest checkout (without login)
-- ✅ Purchase from different categories
-- ✅ Remove item before purchase
-- ✅ Cart persistence after login
-- ✅ Cart persistence after logout/re-login
-- ✅ Minimal order form data
-- ✅ Product detail verification before adding to cart
+- Complete purchase as logged-in user
+- Complete purchase as guest
+- Multi-item purchase
+- Cart modification before checkout
 
-### API Tests (@api)
+### API Testing Coverage (@api)
 
-- ✅ Get all product entries
-- ✅ Get product by ID
-- ✅ Get products by category (phone, laptop, monitor)
-- ✅ Signup new user
-- ✅ Signup existing user (error)
-- ✅ Login with valid credentials
-- ✅ Login with invalid credentials
-- ✅ Add item to cart
-- ✅ View cart
+**Product API (6 tests)**
+- Get all products, get by ID, filter by category
+- Invalid category handling
 
-## 🔄 CI/CD
+**Authentication API (5 tests)**
+- Signup new user, duplicate signup prevention
+- Login with valid/invalid credentials
+- Session management (logout)
 
-GitHub Actions workflow (`.github/workflows/playwright.yml`) runs:
+**Cart API (15 tests)**
+- Happy Path: Add/view/delete items, login cart, cart sequence
+- Edge Cases: Duplicate products, invalid IDs, session isolation, concurrent operations
 
-- On push/PR to `main`/`develop`
-- Daily scheduled runs (6:00 AM UTC)
-- Cross-browser matrix testing (Chromium, Firefox, WebKit)
-- Separate jobs for smoke tests and API tests
-- Automatic report upload as artifacts
+---
 
-## 🏗️ Architecture
+## Architecture
 
-### Page Object Model (POM)
+### Page Object Model
 
-```text
+```
 BasePage (abstract)
-├── HomePage      → Product grid, categories, navigation
-├── LoginPage     → Login/Signup modals
-├── ProductPage   → Product details, Add to cart
-└── CartPage      → Cart items, Place order, Purchase confirmation
+├── HomePage      - Product grid, categories
+├── LoginPage     - Login/Signup modals
+├── ProductPage   - Product details, Add to cart
+└── CartPage      - Cart items, Checkout flow
 
 Components:
-├── HeaderComponent → Navigation, Login/Logout/Cart links
-└── ModalComponent  → Reusable modal dialog handler
+├── HeaderComponent - Navigation links
+└── ModalComponent  - Modal dialog handler
 ```
 
-### Test Fixtures
+### BDD Layer
 
-Custom Playwright fixtures automatically inject Page Objects into tests:
+```
+features/*.feature     - Gherkin scenarios
+       |
+steps/*.steps.ts       - Step definitions
+       |
+src/pages/*.ts         - Page Objects
+       |
+Playwright API         - Browser automation
+```
+
+---
+
+## Environment Configuration
+
+Copy `.env.example` to `.env` and configure:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `BASE_URL` | `https://www.demoblaze.com` | Application URL |
+| `API_URL` | `https://api.demoblaze.com` | API URL |
+| `HEADLESS` | `true` | Run headless mode |
+| `TIMEOUT` | `30000` | Default timeout (ms) |
+
+---
+
+## CI/CD
+
+GitHub Actions workflow runs automatically on:
+- Push/PR to `main` branch
+- Cross-browser testing (Chromium, Firefox, WebKit)
+- Test reports uploaded as artifacts
+
+---
+
+## Writing New Tests
+
+### 1. Add scenario to feature file
+
+```gherkin
+# features/login.feature
+@login @happy-path
+Scenario: My new login test
+  Given I am on the DemoBlaze homepage
+  When I open the login modal
+  And I login with username "user" and password "pass"
+  Then I should be logged in as "user"
+```
+
+### 2. Create step definition (if needed)
 
 ```typescript
-import { test, expect } from '../../src/fixtures';
-
-test('example', async ({ homePage, loginPage, cartPage, productPage }) => {
-  // Page objects are ready to use
-  await homePage.open();
+// steps/login.steps.ts
+When('I do something new', async ({ loginPage }) => {
+  await loginPage.doSomething();
 });
 ```
 
-## 📝 Writing New Tests
+### 3. Generate and run
 
-1. Create a Page Object in `src/pages/` if needed (extend `BasePage`)
-
-2. Add the page to fixtures in `src/fixtures/pages.fixture.ts`
-
-3. Write test in `tests/ui/` or `tests/api/`:
-
-```typescript
-import { test, expect } from '../../src/fixtures';
-
-test.describe('My New Feature', () => {
-  test('should do something', async ({ homePage, loginPage }) => {
-    await homePage.open();
-    // ... test steps
-  });
-});
+```bash
+npm run bddgen
+npm run test:login
 ```
 
-4. Add test data in `test-data/` as JSON files
+---
 
-## 📄 License
+## License
 
 MIT License
+
+---
+
+## Author
+
+Hien Pham Van
+
+GitHub: https://github.com/HienPham2022

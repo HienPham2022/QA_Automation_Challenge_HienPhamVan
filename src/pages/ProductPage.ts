@@ -71,4 +71,13 @@ export class ProductPage extends BasePage {
   async isOnProductPage(): Promise<boolean> {
     return this.page.url().includes('prod.html');
   }
+
+  async isProductImageVisible(): Promise<boolean> {
+    try {
+      await this.productImage.waitFor({ state: 'visible', timeout: 5000 });
+      return true;
+    } catch {
+      return false;
+    }
+  }
 }
