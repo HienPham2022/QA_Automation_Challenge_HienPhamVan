@@ -12,6 +12,8 @@ on:
 env:
   BASE_URL: https://www.demoblaze.com
   API_URL: https://api.demoblaze.com
+  TEST_USERNAME: ${{ secrets.TEST_USERNAME }}
+  TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
 
 jobs:
   test:
