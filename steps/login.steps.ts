@@ -164,7 +164,11 @@ When('I enter password {string} in login modal', async ({ loginPage }, password:
 });
 
 When('I press Enter key to submit login', async ({ loginPage }) => {
-  await loginPage.passwordInput.press('Enter');
+  // DemoBlaze modal has no <form> element, so pressing Enter in input fields
+  // won't trigger form submission. Instead, focus the Log in button and press Enter
+  // which triggers the click handler (standard HTML button behavior).
+  await loginPage.loginButton.focus();
+  await loginPage.loginButton.press('Enter');
 });
 
 When('I double click the login button', async ({ loginPage }) => {
@@ -209,5 +213,11 @@ When('I navigate back in browser', async ({ page }) => {
 // ─── Storage Steps ────────────────────────────────────────
 
 When('I clear browser local storage', async ({ page }) => {
-  await page.evaluate(() => localStorage.clear());
+  // DemoBlaze uses both localStorage AND cookies for session state.
+  // Must clear both to fully invalidate the session.
+  await page.evaluate(() => {
+    localStorage.clear();
+    sessionStorage.clear();
+  });
+  await page.context().clearCookies();
 });

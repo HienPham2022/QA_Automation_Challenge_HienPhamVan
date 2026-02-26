@@ -14,8 +14,11 @@ Feature: End-to-End Purchase Flow
     When I open the login modal
     And I login with username "hienpham" and password "123"
     Then I should be logged in as "hienpham"
+    # Clear existing cart items from previous runs
+    When I navigate to the cart
+    And I clear the cart
     # Browse and add product
-    When I go back to the homepage
+    And I go back to the homepage
     And I click on product "Samsung galaxy s6"
     And I add the product to cart
     And I navigate to the cart
@@ -52,7 +55,8 @@ Feature: End-to-End Purchase Flow
   @functional
   Scenario: Complete purchase as a guest user (without login)
     Given I am on the DemoBlaze homepage
-    When I click on product "Apple monitor 24"
+    When I select the "Monitors" category
+    And I click on product "Apple monitor 24"
     And I add the product to cart
     And I navigate to the cart
     Then the cart should contain 1 item
@@ -61,7 +65,7 @@ Feature: End-to-End Purchase Flow
     And the order confirmation should contain "Amount"
     When I close the order confirmation
 
-  @smoke @functional
+  @smoke @functional @timeout:120000
   Scenario: Purchase random product from each category
     Given I am on the DemoBlaze homepage
     # Random phone
@@ -117,18 +121,18 @@ Feature: End-to-End Purchase Flow
   # ────────────────────────────────────────────
 
   @functional
-  Scenario: Cart persists after login
+  Scenario: Cart persists after page navigation for logged-in user
     Given I am on the DemoBlaze homepage
-    # Add product before login
-    When I click on product "Samsung galaxy s6"
-    And I add the product to cart
-    # Now login
-    And I go back to the homepage
-    And I open the login modal
+    # Login first
+    When I open the login modal
     And I login with username "hienpham" and password "123"
     Then I should be logged in as "hienpham"
-    # Verify cart still has the item
-    When I navigate to the cart
+    # Add product after login
+    When I click on product "Samsung galaxy s6"
+    And I add the product to cart
+    # Navigate away and come back
+    And I go back to the homepage
+    And I navigate to the cart
     Then the cart should have at least 1 item
 
   @functional

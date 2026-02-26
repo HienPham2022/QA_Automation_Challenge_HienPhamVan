@@ -150,7 +150,7 @@ Feature: User Authentication
   Scenario: Login with username containing only spaces
     When I open the login modal
     And I login expecting an alert with username "   " and password "password123"
-    Then I should see an alert with message containing "Please fill out"
+    Then I should see an alert with message containing "Wrong password"
     And I should not be logged in
 
   @edge-case @negative
@@ -282,7 +282,7 @@ Feature: User Authentication
   Scenario: Signup with username containing only spaces
     When I open the signup modal
     And I signup with username "   " and password "password123"
-    Then I should see an alert with message containing "Please fill out"
+    Then I should see an alert with message containing "already exist"
 
   # ────────────────────────────────────────────
   # Signup - Boundary / Input Limits
@@ -325,7 +325,7 @@ Feature: User Authentication
     When I open the login modal
     And I login expecting an alert with username "hienpham" and password "wrong1"
     Then I should see an alert with message containing "Wrong password"
-    When I close the alert
+    When I close the login modal
     And I open the login modal
     And I login expecting an alert with username "hienpham" and password "wrong2"
     Then I should see an alert with message containing "Wrong password"

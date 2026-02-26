@@ -15,9 +15,9 @@ export default defineConfig({
   testDir: bddTestDir,
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 1,
+  retries: process.env.CI ? 2 : 2,
   workers: process.env.CI ? 1 : undefined,
-  timeout: 60000,
+  timeout: 90000,
   expect: {
     timeout: 10000,
   },

@@ -73,14 +73,41 @@ export class CartPage extends BasePage {
   }
 
   async navigateToCart(): Promise<void> {
-    await this.header.clickCart();
+    // Wait for the /viewcart API response; catch timeout in case the
+    // response was already cached or the page loaded the cart data early.
+    await Promise.all([
+      this.page.waitForResponse(
+        (resp) => resp.url().includes('/viewcart') && resp.status() === 200,
+        { timeout: 5000 },
+      ).catch(() => {
+        logger.info('No /viewcart response detected – cart data may already be loaded');
+      }),
+      this.header.clickCart(),
+    ]);
     await this.waitForPageLoad();
-    await this.page.waitForTimeout(1000); // Wait for cart items to load
+    // Wait for cart table to be present before proceeding
+    await this.cartTable.waitFor({ state: 'attached', timeout: 10000 });
+    await this.page.waitForTimeout(1000); // Wait for cart items to render
   }
 
   async getCartItemCount(): Promise<number> {
-    await this.page.waitForTimeout(500);
-    return await this.cartItems.count();
+    // Wait for cart table body to be present, then give items time to render.
+    await this.cartTable.waitFor({ state: 'attached', timeout: 10000 });
+    // DemoBlaze loads cart items asynchronously; poll until stable.
+    let count = 0;
+    let stable = 0;
+    for (let i = 0; i < 10; i++) {
+      await this.page.waitForTimeout(500);
+      const current = await this.cartItems.count();
+      if (current === count && current > 0) {
+        stable++;
+        if (stable >= 2) break; // count unchanged twice in a row
+      } else {
+        count = current;
+        stable = 0;
+      }
+    }
+    return count;
   }
 
   async getCartItems(): Promise<CartItem[]> {
@@ -106,20 +133,86 @@ export class CartPage extends BasePage {
   }
 
   async getTotalPrice(): Promise<number> {
+    // Wait for the total element to be attached
+    await this.totalPrice.waitFor({ state: 'attached', timeout: 10000 });
+
+    // Wait for page to settle – DemoBlaze loads cart items asynchronously.
+    // We wait until EITHER the total appears OR the cart is confirmed empty
+    // (no rows in table body AND loading is done).
+    const hasTotal = await this.page.waitForFunction(
+      () => {
+        const totalEl = document.querySelector('#totalp');
+        const rows = document.querySelectorAll('#tbodyid tr');
+
+        // Case 1: total has a value → cart has item(s)
+        if (totalEl && totalEl.textContent && totalEl.textContent.trim().length > 0) {
+          return 'has-total';
+        }
+        // Case 2: no rows at all → empty cart, total will stay blank
+        if (rows.length === 0) {
+          return 'empty';
+        }
+        // Still loading – keep waiting
+        return false;
+      },
+      { timeout: 15000 },
+    );
+
+    const result = await hasTotal.jsonValue();
+    if (result === 'empty') {
+      return 0;
+    }
+
     const totalText = await this.totalPrice.textContent() || '0';
     return parsePrice(totalText);
   }
 
   async deleteItemByIndex(index: number): Promise<void> {
     logger.info(`Deleting cart item at index: ${index}`);
-    await this.deleteButtons.nth(index).click();
-    await this.page.waitForTimeout(1000); // Wait for item to be removed
+
+    // Click delete and wait for the server-side delete to complete
+    const [response] = await Promise.all([
+      this.page.waitForResponse(
+        (resp) => resp.url().includes('/deleteitem') && resp.status() === 200,
+        { timeout: 10000 },
+      ),
+      this.deleteButtons.nth(index).click(),
+    ]);
+
+    // Navigate fresh to the cart page and wait for cart data to fully load
+    await this.navigateToCartFresh();
   }
 
   async deleteItemByName(productName: string): Promise<void> {
     logger.info(`Deleting cart item: ${productName}`);
     const row = this.page.locator('#tbodyid tr').filter({ hasText: productName });
-    await row.locator('a').filter({ hasText: 'Delete' }).click();
+
+    // Click delete and wait for the server-side delete to complete
+    const [response] = await Promise.all([
+      this.page.waitForResponse(
+        (resp) => resp.url().includes('/deleteitem') && resp.status() === 200,
+        { timeout: 10000 },
+      ),
+      row.locator('a').filter({ hasText: 'Delete' }).click(),
+    ]);
+
+    // Navigate fresh to the cart page and wait for cart data to fully load
+    await this.navigateToCartFresh();
+  }
+
+  /**
+   * Navigate to the cart page and wait for the /viewcart API response
+   * to ensure all cart items are fully loaded in the DOM.
+   */
+  private async navigateToCartFresh(): Promise<void> {
+    const [viewcartResponse] = await Promise.all([
+      this.page.waitForResponse(
+        (resp) => resp.url().includes('/viewcart') && resp.status() === 200,
+        { timeout: 15000 },
+      ),
+      this.navigate('/cart.html'),
+    ]);
+    // Give the DOM time to render the items from the viewcart response
     await this.page.waitForTimeout(1000);
   }
 

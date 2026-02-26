@@ -40,8 +40,7 @@ A comprehensive BDD test automation framework built with **Playwright**, **TypeS
 ├── tests/api/              # API tests (26 tests)
 ├── test-data/              # Test data (JSON)
 ├── reports/                # Test reports (generated)
-├── README.md               # Full documentation
-└── test-suite.txt          # Detailed test suite document
+└── README.md               # Full documentation
 ```
 
 ---
@@ -171,6 +170,7 @@ npm run bddgen
 
 # Step 2: Run specific scenario by name
 npx playwright test -g "Scenario Name" --headed --project=chromium --workers=1
+remember that scenario name is taken from ~/feature/*.feature files 
 ```
 
 ### Examples

@@ -59,7 +59,14 @@ export class LoginPage extends BasePage {
     logger.info(`Logging in with username: ${credentials.username}`);
     await this.fillInput(this.usernameInput, credentials.username);
     await this.fillInput(this.passwordInput, credentials.password);
-    await this.loginButton.click();
+    // Wait for login API response to complete before proceeding
+    const [response] = await Promise.all([
+      this.page.waitForResponse(
+        (resp) => resp.url().includes('/login') && resp.status() === 200,
+        { timeout: 15000 },
+      ),
+      this.loginButton.click(),
+    ]);
   }
 
   async loginWithAlert(credentials: UserCredentials): Promise<string> {
@@ -92,7 +99,15 @@ export class LoginPage extends BasePage {
 
   async verifyLoginSuccess(username: string): Promise<void> {
     logger.info('Verifying login success');
-    await this.header.welcomeUser.waitFor({ state: 'visible', timeout: 10000 });
+    // DemoBlaze sometimes delays updating the welcome text; retry with a
+    // page reload if the element stays hidden after the initial wait.
+    try {
+      await this.header.welcomeUser.waitFor({ state: 'visible', timeout: 15000 });
+    } catch {
+      logger.info('Welcome user not visible yet – reloading page and retrying');
+      await this.page.reload({ waitUntil: 'domcontentloaded' });
+      await this.header.welcomeUser.waitFor({ state: 'visible', timeout: 15000 });
+    }
     const welcomeText = await this.header.getWelcomeMessage();
     expect(welcomeText).toContain(username);
   }

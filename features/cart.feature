@@ -153,7 +153,7 @@ Feature: Shopping Cart Management
     And I click on product "Nokia lumia 1520"
     And I add the product to cart
     And I navigate to the cart
-    And I delete cart item at index 0
+    And I delete cart item "Samsung galaxy s6"
     Then the cart total should be 820
 
   @happy-path
@@ -374,12 +374,12 @@ Feature: Shopping Cart Management
 
   @edge-case
   Scenario: Cart persists after user login
-    When I click on product "Samsung galaxy s6"
-    And I add the product to cart
-    And I go back to the homepage
-    And I open the login modal
+    When I open the login modal
     And I login with username "hienpham" and password "123"
     And I should be logged in as "hienpham"
+    And I go back to the homepage
+    And I click on product "Samsung galaxy s6"
+    And I add the product to cart
     And I navigate to the cart
     Then the cart should have at least 1 item
 

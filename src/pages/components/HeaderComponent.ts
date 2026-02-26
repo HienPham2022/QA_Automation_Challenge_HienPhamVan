@@ -71,6 +71,7 @@ export class HeaderComponent {
   }
 
   async getWelcomeMessage(): Promise<string> {
+    await this.welcomeUser.waitFor({ state: 'visible', timeout: 10000 });
     return (await this.welcomeUser.textContent()) || '';
   }
 }

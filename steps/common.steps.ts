@@ -23,7 +23,8 @@ Then('I should be on the homepage', async ({ homePage }) => {
 
 When('I refresh the page', async ({ page }) => {
   await page.reload();
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
+  await page.waitForTimeout(1000);
 });
 
 // ─── Alert Verification ──────────────────────────────────
